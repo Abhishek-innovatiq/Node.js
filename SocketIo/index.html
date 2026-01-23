@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="chat-container">
+    <h3>Chat App</h3>
+
+    <input id="usernameInput" type="text" placeholder="Enter your name" />
+
+    <div id="messages"></div>
+
+    <input id="messageInput" type="text" placeholder="Type message..." />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    const messagesDiv = document.getElementById('messages');
+    const msgInput = document.getElementById('messageInput');
+    const userInput = document.getElementById('usernameInput');
+
+    userInput.addEventListener('change', () => {
+        socket.emit('setUsername', userInput.value);
+    });
+
+    function sendMessage() {
+        const message = msgInput.value;
+        if (message.trim() !== '') {
+            socket.emit('chatMessage', message);
+            msgInput.value = '';
+        }
+    }
+
+    socket.on('chatMessage', (data) => {
+        const p = document.createElement('p');
+        p.classList.add('msg');
+        p.innerHTML = `<span class="user">${data.user}:</span> ${data.message}`;
+        messagesDiv.appendChild(p);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
