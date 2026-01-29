@@ -1,0 +1,45 @@
+<h2>User Registration Form</h2>
+
+<form [formGroup]="registerForm" (submit)="onSubmit()">
+
+  <!-- Name -->
+  <label>Name</label><br>
+  <input type="text" formControlName="name">
+ @if (registerForm.get('name')?.touched && registerForm.get('name')?.invalid) {
+  <div class="error">Name is required</div>
+}
+
+  <br><br>
+
+  <!-- Email -->
+  <label>Email</label><br>
+  <input type="email" formControlName="email">
+ @if (registerForm.get('email')?.touched && registerForm.get('email')?.invalid) {
+  <div class="error">Please enter a valid email</div>
+}
+
+  <br><br>
+
+  <!-- Password -->
+  <label>Password</label><br>
+  <input type="password" formControlName="password">
+ @if (registerForm.get('password')?.touched && registerForm.get('password')?.invalid) {
+  <div class="error">password must be at least 6 character</div>
+}
+
+  <br><br>
+
+  <!-- Age -->
+  <label>Age</label><br>
+  <input type="number" formControlName="age">
+  @if (registerForm.get('number')?.touched && registerForm.get('number')?.invalid) {
+  <div class="error">Please enter your age </div>
+}
+
+  <br><br>
+
+  <button type="submit" [disabled]="registerForm.invalid">
+    Submit
+  </button>
+
+</form>
