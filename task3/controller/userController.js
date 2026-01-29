@@ -1,110 +1,105 @@
-let users = [
-  { id: 1, name: "Rahul", email: "rahul@gmail.com" },
-  { id: 2, name: "Amit", email: "amit@gmail.com" },
-  { id: 3, name: "Abhishek", email: "ab@gmail.com" },
-  { id: 4, name: "Aashish", email: "as@gmail.com" }
-];
+const User = require("../model/userModel");
 
-exports.getUSer = async (req, res) => {
+exports.getUser = async (req, res) => {
   try {
+    const users = await User.find();
+
     return res.status(200).json({
       success: true,
-      message: "user data fetched Successfully",
+      message: "User data fetched successfully",
       data: users,
     });
+
   } catch (error) {
-    console.log("getting error in getUser controller", error);
+    console.log("Error in getUser controller", error);
     return res.status(500).json({
       success: false,
-      messsage: "getting error ",
+      message: "Error while fetching users",
     });
   }
 };
 
-exports.addUSer = async (req, res) => {
-      try{
-  const { name, email } = req.body;
+exports.addUser = async (req, res) => {
+  try {
+    const { name, email } = req.body;
 
-  const newUser = {
-    id: users.length + 1,
-    name,
-    email
-  };
+    const newUser = await User.create({
+      name,
+      email,
+    });
 
-  users.push(newUser);
-
-  return res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: "user Successfully added",
+      message: "User added successfully",
       data: newUser,
-  });
-}
-catch (error) {
-    console.log("getting error in addUser controller", error);
+    });
+
+  } catch (error) {
+    console.log("Error in addUser controller", error);
     return res.status(500).json({
       success: false,
-      messsage: "getting error in addUser controller",
+      message: "Error while adding user",
     });
-  };
+  }
 };
-
 
 exports.updateUser = async (req, res) => {
-      try{
-  const userId = parseInt(req.params.id);
-  const { name, email } = req.body;
+  try {
+    const userId = req.params.id;
+    const { name, email } = req.body;
 
-  const user = users.find(u => u.id === userId);
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, email },
+      { new: true }
+    );
 
-  if (!user) {
-    return res.status(404).json({
-      message: "User not found"
-    });
-  }
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-  user.name = name;
-  user.email = email;
-
- return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "user Successfully updated",
-      data: user,
-  });
-}
-catch (error) {
-    console.log("getting error in updateUser controller", error);
+      message: "User updated successfully",
+      data: updatedUser,
+    });
+
+  } catch (error) {
+    console.log("Error in updateUser controller", error);
     return res.status(500).json({
       success: false,
-      messsage: "getting error in updateUser controller",
+      message: "Error while updating user",
     });
-  };
+  }
 };
 
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = parseInt(req.params.id);
+    const userId = req.params.id;
 
-    const index = users.findIndex(u => u.id === userId);
+    const deletedUser = await User.findByIdAndDelete(userId);
 
-    if (index === -1) {
+    if (!deletedUser) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
+        message: "User not found",
       });
     }
-    const deletedUser = users.splice(index, 1);
 
     return res.status(200).json({
       success: true,
       message: "User deleted successfully",
-      data: deletedUser[0]
+      data: deletedUser,
     });
 
   } catch (error) {
-    console.log("getting error in deleteUser controller", error);
+    console.log("Error in deleteUser controller", error);
     return res.status(500).json({
       success: false,
-      message: "getting error in deleteUser controller"
+      message: "Error while deleting user",
     });
   }
 };

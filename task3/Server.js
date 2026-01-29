@@ -1,13 +1,15 @@
 const express = require('express');
 const userRoute = require('./routes/userRoutes');
-
+const dbconnect = require('./config/dbConnection');
 
 const app = express();
 
-app.use(express.json());   
+app.use(express.json());
+
+dbconnect();
 
 app.get("/", (req, res) => {
-  res.send("<h1>This is a Backend task </h1>");
+  res.send("<h1>This is a Backend task</h1>");
 });
 
 app.use('/user', userRoute);
