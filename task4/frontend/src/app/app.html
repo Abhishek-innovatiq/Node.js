@@ -1,0 +1,49 @@
+<h2>User Management</h2>
+<form (submit)="submitUser()" novalidate>
+  <input
+    type="text"
+    placeholder="Enter Name"
+    [(ngModel)]="user.name"
+    name="name"
+    required
+  />
+
+  <input
+    type="email"
+    placeholder="Enter Email"
+    [(ngModel)]="user.email"
+    name="email"
+    required
+  />
+
+  <button type="submit">
+    {{ isEdit ? 'Update User' : 'Add User' }}
+  </button>
+</form>
+
+<hr />
+
+<table cellpadding="8">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Updation</th>
+  </tr>
+
+  @for (u of users; track u._id) {
+    <tr>
+      <td>{{ u._id }}</td>
+      <td>{{ u.name }}</td>
+      <td>{{ u.email }}</td>
+      <td>
+        <button type="button" (click)="editUser(u)">
+          Edit
+        </button>
+        <button type="button" (click)="deleteUser(u._id!)">
+          Delete
+        </button>
+      </td>
+    </tr>
+  }
+</table>
